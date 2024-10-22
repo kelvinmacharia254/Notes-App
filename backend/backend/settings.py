@@ -28,6 +28,8 @@ SECRET_KEY = 'django-insecure-3(ep_1wia%qacgc1f5b4_)2q!h+2qdn&45!zdt_u#%5u9wkeh+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+AUTH_USER_MODEL = "accounts.CustomUser"  # Custom user model
+
 ALLOWED_HOSTS = ["*"]  # Allow all hosts for development
 
 REST_FRAMEWORK = {
@@ -37,12 +39,21 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "NOTES API",
+    "DESCRIPTION": "API for managing notes",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
 
 # Application definition
 
@@ -57,8 +68,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'djoser',
+    'drf_spectacular',
     #     Local apps
     'api.apps.ApiConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
