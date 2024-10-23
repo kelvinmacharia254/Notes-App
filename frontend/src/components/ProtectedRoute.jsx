@@ -4,7 +4,7 @@ import api from "../api";
 import {REFRESH_TOKEN, ACCESS_TOKEN} from "../constants.js";
 import {useState, useEffect} from "react";
 
-// This component is a wrapper for the Route component from react-router-dom.
+// This component is a wrapper for any other route which required authenticated user.
 // It checks if the user is authorized to access the route by checking the access token in the local storage.
 // If the access token is not present or expired, it tries to refresh the token using the refresh token.
 // If the refresh token is also expired, it redirects the user to the login page.
@@ -43,8 +43,8 @@ export default function ProtectedRoute({children}) {
         }
         // decode the token to get the expiration date
         const decoded = jwtDecode(token);
-        const tokenExpiration = decoded.exp;
-        const now = Date.now() / 1000;
+        const tokenExpiration = decoded.exp; // expiration time in seconds
+        const now = Date.now() / 1000; // current time in seconds
         if(tokenExpiration < now) {
             // if token is expired, try to refresh it
             await refreshToken();
@@ -59,6 +59,6 @@ export default function ProtectedRoute({children}) {
         return <div>Loading...</div>
     }
 
-    // if isAuthorized is false, redirect to login page
+    // if isAuthorized is false, redirect to login page otherwise render the children route
     return isAuthorized ? children : <Navigate to="/login" />
 }

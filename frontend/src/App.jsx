@@ -7,7 +7,7 @@ import NotFound from "./pages/NotFound.jsx";
 import Register from "./pages/Register.jsx";
 
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-function logout(){
+function Logout(){
     // logout by removing the access token from the local storage
     localStorage.removeItem("access");
     return <Navigate to="/login" />
@@ -23,6 +23,7 @@ function App() {
     const router = createBrowserRouter([
         {path: "/", element: <ProtectedRoute><Home /></ProtectedRoute>},
         {path: "/login", element: <Login />},
+        {path: "/logout", element: <Logout />},
         {path: "/register", element: <RegisterAndLogout />},
         {path: "*", element: <NotFound/>},
     ]);
