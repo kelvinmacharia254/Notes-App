@@ -1,26 +1,52 @@
-import { useState, useEffect } from "react";
-import api from "../api";
-import Note from "../components/Note.jsx"
-import "../styles/Home.css"
+import { Form, useLoaderData } from "react-router-dom";
+import api from "../api.js";
+import Note from "../components/Note.jsx";
+import "../styles/Home.css";
+
+// Loader function to fetch notes
+export async function loader() {
+    try {
+        console.log("Loading notes...");
+        const response = await api.get("/api/notes/");
+        return response.data;  // This will work as expected if the response is ok.
+    } catch (error) {
+        console.error("Failed to load notes:", error);
+        throw new Error("Failed to load notes.");
+    }
+}
+
+// Action function to handle note creation
+export async function action({ request }) {
+    console.log("Processing action for creating a note...");
+
+    try {
+        const formData = await request.formData();
+        const title = formData.get("title");
+        const content = formData.get("content");
+
+        const response = await api.post("/api/notes/", { title, content });
+
+        // Check for the successful response status
+        if (response.status !== 201) {
+            throw new Error("Failed to create note.");
+        }
+
+        // Log the success response for debugging
+        console.log("Note created successfully:", response.data);
+
+        return response.data; // Return the created note data
+    } catch (error) {
+        // Log the error for debugging purposes
+        console.error("Error creating note:", error);
+
+        // Optionally rethrow the error or return a specific message
+        throw new Error("Failed to create note due to an error.");
+    }
+}
+
+
 export default function Home() {
-    const [notes, setNotes] = useState([]);
-    const [content, setContent] = useState("");
-    const [title, setTitle] = useState("");
-
-    useEffect(() => {
-        getNotes();
-    }, []);
-
-    const getNotes = () => {
-        api
-            .get("/api/notes/")
-            .then((res) => res.data)
-            .then((data) => {
-                setNotes(data);
-                console.log(data);
-            })
-            .catch((err) => alert(err));
-    };
+    const notes = useLoaderData(); // Data is automatically passed by the loader
 
     const deleteNote = (id) => {
         api
@@ -28,21 +54,8 @@ export default function Home() {
             .then((res) => {
                 if (res.status === 204) alert("Note deleted!");
                 else alert("Failed to delete note.");
-                getNotes();
             })
             .catch((error) => alert(error));
-    };
-
-    const createNote = (e) => {
-        e.preventDefault();
-        api
-            .post("/api/notes/", { content, title })
-            .then((res) => {
-                if (res.status === 201) alert("Note created!");
-                else alert("Failed to make note.");
-                getNotes();
-            })
-            .catch((err) => alert(err));
     };
 
     return (
@@ -50,34 +63,20 @@ export default function Home() {
             <div>
                 <h2>Notes</h2>
                 {notes.map((note) => (
-                    <Note note={note} onDelete={deleteNote} key={note.id} />
+                    <Note note={note}  onDelete={deleteNote} key={note.id} /> //
                 ))}
             </div>
             <h2>Create a Note</h2>
-            <form onSubmit={createNote}>
+            <Form method="post">
                 <label htmlFor="title">Title:</label>
                 <br />
-                <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    required
-                    onChange={(e) => setTitle(e.target.value)}
-                    value={title}
-                />
+                <input type="text" id="title" name="title" required />
                 <label htmlFor="content">Content:</label>
                 <br />
-                <textarea
-                    id="content"
-                    name="content"
-                    required
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                ></textarea>
+                <textarea id="content" name="content" required></textarea>
                 <br />
                 <input type="submit" value="Submit"></input>
-            </form>
+            </Form>
         </div>
     );
 }
-
