@@ -10,6 +10,7 @@ import {useState, useEffect} from "react";
 // If the refresh token is also expired, it redirects the user to the login page.
 export default function ProtectedRoute({children}) {
     const [isAuthorized, setIsAuthorized] = useState(null);
+    console.log(isAuthorized)
 
     // check if user is authorized when the component is mounted
     useEffect(() => {
@@ -55,6 +56,8 @@ export default function ProtectedRoute({children}) {
     }
 
     // when isAuthorized is null, we are still checking if the user is authorized
+    // So we return a loading message or spinner.
+    // This prevents the children route from being rendered before we know if the user is authorized.
     if(isAuthorized === null) {
         return <div>Loading...</div>
     }

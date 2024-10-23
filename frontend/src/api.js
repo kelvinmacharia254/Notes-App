@@ -9,6 +9,8 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem(ACCESS_TOKEN);
+        // if token is present, add it to the headers
+        // ensure unauthenticated endpoints clears the token before sending the request e.g Register endpoint
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
