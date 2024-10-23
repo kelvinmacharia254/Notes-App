@@ -2,13 +2,13 @@ import React from "react";
 import {createBrowserRouter, RouterProvider, Navigate} from "react-router-dom";
 
 import Root from "./pages/Root.jsx";
-import Home, {loader as notesLoader, action as notesAddAction} from "./pages/Home.jsx";
+import Home, {loader as notesLoader, action as notesAddAction } from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
-import NotFound from "./pages/NotFound.jsx";
 import Register from "./pages/Register.jsx";
 
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ErrorPage from "./ErrorPage.jsx";
+import {noteDeleteAction} from "./actions/notesAction/DeleteNote.js";
 
 function Logout(){
     // logout by removing the access token from the local storage
@@ -30,10 +30,14 @@ function App() {
         errorElement: <ErrorPage/>,
         children: [
           {
-            path: "/",
+            index: true,
             element: <ProtectedRoute><Home/></ProtectedRoute>,
             loader: notesLoader,
             action: notesAddAction,
+          },
+          {
+            path:"/delete/:id",
+            action: noteDeleteAction,
           },
           {path: "/login", element: <Login/>},
           {path: "/logout", element: <Logout/>},

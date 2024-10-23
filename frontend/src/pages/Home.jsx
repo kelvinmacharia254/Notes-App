@@ -48,22 +48,12 @@ export async function action({ request }) {
 export default function Home() {
     const notes = useLoaderData(); // Data is automatically passed by the loader
 
-    const deleteNote = (id) => {
-        api
-            .delete(`/api/notes/${id}/`)
-            .then((res) => {
-                if (res.status === 204) alert("Note deleted!");
-                else alert("Failed to delete note.");
-            })
-            .catch((error) => alert(error));
-    };
-
     return (
         <div>
             <div>
                 <h2>Notes</h2>
                 {notes.map((note) => (
-                    <Note note={note}  onDelete={deleteNote} key={note.id} /> //
+                    <Note note={note} key={note.id} /> //
                 ))}
             </div>
             <h2>Create a Note</h2>
