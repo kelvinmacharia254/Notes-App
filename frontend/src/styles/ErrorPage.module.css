@@ -1,0 +1,9 @@
+.error-page {
+  min-height: 100vh; /* Use vh to ensure it takes the full viewport height */
+  display: flex; /* Use flexbox layout */
+  flex-direction: column; /* Align items vertically */
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically */
+  width: 100%; /* Full width */
+  text-align: center; /* Center text inside */
+}
