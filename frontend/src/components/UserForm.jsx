@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Form, useNavigation} from "react-router-dom";
 
 import "../styles/Form.css";
@@ -7,13 +7,20 @@ import LoadingIndicator from "./LoadingIndicator.jsx";
 // The Form component is a reusable component that can be used to create forms for login, register, and other forms.
 // The Form component takes two props: route and method.
 // The route prop is the URL to which the form data will be sent, and the method prop is the HTTP method to be used to register or login.
-export default function UserForm({method}){
+export default function UserForm({method,  actionData}){
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const formMode = method === 'login'? "Login":"Register"
 
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false) //control spinner display
+
+    // Use an effect to stop loading if there are errors
+    useEffect(()=>{
+        if(actionData && actionData.errors){
+            setIsLoading(false)
+        }
+    },[actionData])
 
     function handleSubmit() {
         setIsLoading(true)

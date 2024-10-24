@@ -55,7 +55,7 @@ export default function Login(){
               </ul>
             )}
             {actionData && actionData.message && <p>{actionData.message}</p>}
-            <UserForm method="login"/>
+            <UserForm method="login" actionData={actionData}/>
         </>
     )
 }

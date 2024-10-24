@@ -50,7 +50,7 @@ export default function Register(){
               </ul>
             )}
             {actionData && actionData.message && <p>{actionData.message}</p>}
-            <UserForm route="/register" method="register"/>
+            <UserForm route="/register" method="register" actionData={actionData}/>
         </>
     )
 }
