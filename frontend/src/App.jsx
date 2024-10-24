@@ -3,8 +3,8 @@ import {createBrowserRouter, RouterProvider, Navigate} from "react-router-dom";
 
 import Root from "./pages/Root.jsx";
 import Home, {loader as notesLoader, action as notesAddAction } from "./pages/Home.jsx";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
+import Login,{action as loginAction} from "./pages/Login.jsx";
+import Register,{action as registerUserAction} from "./pages/Register.jsx";
 
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ErrorPage from "./ErrorPage.jsx";
@@ -29,20 +29,28 @@ function App() {
         element: <Root/>,
         errorElement: <ErrorPage/>,
         children: [
-          {
-            index: true,
-            element: <ProtectedRoute><Home/></ProtectedRoute>,
-            loader: notesLoader,
-            action: notesAddAction,
-          },
-          {
-            path:"/delete/:id",
-            action: noteDeleteAction,
-          },
-          {path: "/login", element: <Login/>},
-          {path: "/logout", element: <Logout/>},
-          {path: "/register", element: <RegisterAndLogout/>},
-        ]
+            {
+                index: true,
+                element: <ProtectedRoute><Home/></ProtectedRoute>,
+                loader: notesLoader,
+                action: notesAddAction,
+            },
+            {
+                path:"/delete/:id",
+                action: noteDeleteAction,
+            },
+            {
+                path: "/register",
+                element: <RegisterAndLogout/>,
+                action: registerUserAction,
+            },
+            {
+                path: "/login",
+                element: <Login/>,
+                action: loginAction,
+            },
+                {path: "/logout", element: <Logout/>},
+            ]
       }
     ]);
   return (
