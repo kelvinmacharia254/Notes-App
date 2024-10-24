@@ -23,10 +23,24 @@ export async function action({request}) {
         console.log("logged in successfully");
         return redirect("/")
     } catch (error) {
-        // Display the error to the user in case of failure
         console.error("Login error:", error);
-        alert("Login failed. Please check your credentials and try again.");
-        return error
+
+        // Prepare a meaningful error message
+        let errorMessage = "Login failed. Please check your credentials and try again.";
+
+        // Handle specific error codes if available
+        if (error.response) {
+            if (error.response.status === 401) {
+                errorMessage = "Invalid username or password.";
+            } else if (error.response.status === 404) {
+                errorMessage = "The requested resource was not found.";
+            } else {
+                errorMessage = "An error occurred. Please try again.";
+            }
+        }
+
+        // Return the error message for the component to display
+        return { errors: { general: errorMessage } };
     }
 }
 export default function Login(){

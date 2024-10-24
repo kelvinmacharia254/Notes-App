@@ -18,10 +18,24 @@ export async function action({request}) {
         return redirect("/login")
 
     } catch (error) {
-        // Display the error to the user in case of failure
         console.error("Registration error:", error);
-        alert("Failed to register new user");
-        return error
+
+        // Prepare a meaningful error message
+        let errorMessage = "Sign in failed. Please check the details you provided.";
+
+        // Handle specific error codes if available
+        if (error.response) {
+            if (error.response.status === 401) {
+                errorMessage = `${error.response.statusText}`;
+            } else if (error.response.status === 404) {
+                errorMessage = "The requested resource was not found.";
+            } else {
+                errorMessage = "An error occurred. Please try again.";
+            }
+        }
+
+        // Return the error message for the component to display
+        return { errors: { general: errorMessage } };
     }
 }
 export default function Register(){
